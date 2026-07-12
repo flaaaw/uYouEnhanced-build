@@ -169,6 +169,7 @@ jobs:
           patch_ordered_categories("Tweaks/Return-YouTube-Dislikes/Settings.x")
           patch_ordered_categories("Tweaks/YTABConfig/Settings.x")
           patch_ordered_categories("Tweaks/YouPiP/Settings.x")
+          patch_ordered_categories("Tweaks/YTIcons/Tweak.x")
 
           # Patch YouPiP LegacyPiPCompat.x
           path = Path("Tweaks/YouPiP/LegacyPiPCompat.x")
