@@ -137,11 +137,13 @@ jobs:
           THEOS: ${{ github.workspace }}/theos
           YOUTUBE_URL: ${{ env.URL_YT }}
 
-      - name: Patch Return-YouTube-Dislikes compile error
+      - name: Patch Return-YouTube-Dislikes and YTABConfig compile errors
         run: |
           cd ${{ github.workspace }}/main
           python3 -c '
           from pathlib import Path
+          
+          # Patch Return-YouTube-Dislikes
           path = Path("Tweaks/Return-YouTube-Dislikes/Settings.x")
           if path.exists():
               content = path.read_text()
@@ -151,9 +153,23 @@ jobs:
                   path.write_text(content.replace(old, new, 1))
                   print("✅ Return-YouTube-Dislikes parchado con éxito.")
               else:
-                  print("⚠️ No se encontró la línea a parchar. Es posible que ya esté corregido.")
+                  print("⚠️ No se encontró la línea a parchar en Return-YouTube-Dislikes. Es posible que ya esté corregido.")
           else:
-              print("❌ No se encontró Settings.x en la ruta especificada.")
+              print("❌ No se encontró Settings.x para Return-YouTube-Dislikes.")
+          
+          # Patch YTABConfig
+          path = Path("Tweaks/YTABConfig/Settings.x")
+          if path.exists():
+              content = path.read_text()
+              old = "NSMutableArray *mutableCategories = %orig.mutableCopy;"
+              new = "NSArray *categories = %orig;\n    NSMutableArray *mutableCategories = [categories mutableCopy];"
+              if old in content:
+                  path.write_text(content.replace(old, new, 1))
+                  print("✅ YTABConfig parchado con éxito.")
+              else:
+                  print("⚠️ No se encontró la línea a parchar en YTABConfig. Es posible que ya esté corregido.")
+          else:
+              print("❌ No se encontró Settings.x para YTABConfig.")
           '
 
       - name: Fix compiling & Build Package
