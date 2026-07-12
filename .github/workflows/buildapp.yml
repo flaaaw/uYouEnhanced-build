@@ -171,6 +171,21 @@ jobs:
           patch_ordered_categories("Tweaks/YouPiP/Settings.x")
           patch_ordered_categories("Tweaks/YTIcons/Tweak.x")
 
+          # Patch YTUHD Filter.x
+          path = Path("Tweaks/YTUHD/Filter.x")
+          if path.exists():
+              content = path.read_text()
+              old = "- (void)setFormats:(NSArray *)formats { %orig(filteredAlot(formats)); }"
+              new = "- (void)setFormats:(NSArray *)formats {\n    NSArray *filtered = filteredAlot(formats);\n    %orig(filtered);\n}"
+              if old in content:
+                  content = content.replace(old, new)
+                  path.write_text(content)
+                  print("✅ YTUHD Filter.x parchado con éxito.")
+              else:
+                  print("⚠️ No se encontró la línea a parchar en YTUHD Filter.x. Es posible que ya esté corregido.")
+          else:
+              print("❌ No se encontró Filter.x para YTUHD.")
+
           # Patch YouPiP LegacyPiPCompat.x
           path = Path("Tweaks/YouPiP/LegacyPiPCompat.x")
           if path.exists():
