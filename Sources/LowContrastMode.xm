@@ -207,25 +207,29 @@ static inline BOOL isDarkMode() {
     }
 }
 - (void)setTextColor:(UIColor *)textColor {
-    %orig(isDarkMode() ? kDefaultTextColor : textColor);
+    UIColor *finalColor = isDarkMode() ? kDefaultTextColor : textColor;
+    %orig(finalColor);
 }
 %end
 
 %hook UITextField
 - (void)setTextColor:(UIColor *)textColor {
-    %orig(isDarkMode() ? kDefaultTextColor : textColor);
+    UIColor *finalColor = isDarkMode() ? kDefaultTextColor : textColor;
+    %orig(finalColor);
 }
 %end
 
 %hook UITextView
 - (void)setTextColor:(UIColor *)textColor {
-    %orig(isDarkMode() ? kDefaultTextColor : textColor);
+    UIColor *finalColor = isDarkMode() ? kDefaultTextColor : textColor;
+    %orig(finalColor);
 }
 %end
 
 %hook UISearchBar
 - (void)setTextColor:(UIColor *)textColor {
-    %orig(isDarkMode() ? kDefaultTextColor : textColor);
+    UIColor *finalColor = isDarkMode() ? kDefaultTextColor : textColor;
+    %orig(finalColor);
 }
 %end
 
@@ -243,7 +247,8 @@ static inline BOOL isDarkMode() {
 
 %hook UIButton
 - (void)setTitleColor:(UIColor *)color forState:(UIControlState)state {
-    %orig(isDarkMode() ? kDefaultTextColor : color, state);
+    UIColor *finalColor = isDarkMode() ? kDefaultTextColor : color;
+    %orig(finalColor, state);
 }
 %end
 
@@ -272,7 +277,8 @@ static inline BOOL isDarkMode() {
 
 %hook CATextLayer
 - (void)setTextColor:(CGColorRef)textColor {
-    %orig(isDarkMode() ? kDefaultTextColor.CGColor : textColor);
+    CGColorRef finalColor = isDarkMode() ? kDefaultTextColor.CGColor : textColor;
+    %orig(finalColor);
 }
 %end
 
@@ -290,19 +296,22 @@ static inline BOOL isDarkMode() {
 
 %hook ASTextFieldNode
 - (void)setTextColor:(UIColor *)textColor {
-    %orig(isDarkMode() ? kDefaultTextColor : textColor);
+    UIColor *finalColor = isDarkMode() ? kDefaultTextColor : textColor;
+    %orig(finalColor);
 }
 %end
 
 %hook ASTextView
 - (void)setTextColor:(UIColor *)textColor {
-    %orig(isDarkMode() ? kDefaultTextColor : textColor);
+    UIColor *finalColor = isDarkMode() ? kDefaultTextColor : textColor;
+    %orig(finalColor);
 }
 %end
 
 %hook ASButtonNode
 - (void)setTextColor:(UIColor *)textColor {
-    %orig(isDarkMode() ? kDefaultTextColor : textColor);
+    UIColor *finalColor = isDarkMode() ? kDefaultTextColor : textColor;
+    %orig(finalColor);
 }
 %end
 
