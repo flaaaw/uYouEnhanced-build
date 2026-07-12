@@ -137,6 +137,25 @@ jobs:
           THEOS: ${{ github.workspace }}/theos
           YOUTUBE_URL: ${{ env.URL_YT }}
 
+      - name: Patch Return-YouTube-Dislikes compile error
+        run: |
+          cd ${{ github.workspace }}/main
+          python3 -c '
+          from pathlib import Path
+          path = Path("Tweaks/Return-YouTube-Dislikes/Settings.x")
+          if path.exists():
+              content = path.read_text()
+              old = "NSMutableArray *mutableCategories = %orig;"
+              new = "NSArray<NSNumber *> *categories = %orig;\n    NSMutableArray<NSNumber *> *mutableCategories = [categories mutableCopy];"
+              if old in content:
+                  path.write_text(content.replace(old, new, 1))
+                  print("✅ Return-YouTube-Dislikes parchado con éxito.")
+              else:
+                  print("⚠️ No se encontró la línea a parchar. Es posible que ya esté corregido.")
+          else:
+              print("❌ No se encontró Settings.x en la ruta especificada.")
+          '
+
       - name: Fix compiling & Build Package
         id: build_package
         run: |
