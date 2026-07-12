@@ -467,47 +467,6 @@ YTMainAppControlsOverlayView *controlsOverlayView;
 // uYou AdBlock Workaround (Note: disables uYou's "Remove YouTube Ads" Option) - @PoomSmart, @arichornlover & @Dodieboy
 %group uYouAdBlockingWorkaround
 // Workaround: uYou 3.0.3 Adblock fix
-%hook YTHotConfig
-- (BOOL)disableAfmaIdfaCollection { return NO; }
-%end
-%hook YTIPlayerResponse
-- (BOOL)isMonetized { return NO; }
-%new(@@:)
-- (NSMutableArray *)playerAdsArray {
-    return [NSMutableArray array];
-}
-%new(@@:)
-- (NSMutableArray *)adSlotsArray {
-    return [NSMutableArray array];
-}
-%end
-%hook YTIClientMdxGlobalConfig
-%new(B@:)
-- (BOOL)enableSkippableAd { return YES; }
-%end
-%hook YTHotConfig
-- (BOOL)clientInfraClientConfigIosEnableFillingEncodedHacksInnertubeContext { return NO; }
-%end
-%hook YTAdShieldUtils
-+ (id)spamSignalsDictionary { return @{}; }
-+ (id)spamSignalsDictionaryWithoutIDFA { return @{}; }
-%end
-%hook YTDataUtils
-+ (id)spamSignalsDictionary { return @{ @"ms": @"" }; }
-+ (id)spamSignalsDictionaryWithoutIDFA { return @{}; }
-%end
-%hook YTAdsInnerTubeContextDecorator
-- (void)decorateContext:(id)context { %orig(nil); }
-%end
-%hook YTAccountScopedAdsInnerTubeContextDecorator
-- (void)decorateContext:(id)context { %orig(nil); }
-%end
-%hook YTLocalPlaybackController
-- (id)createAdsPlaybackCoordinator { return nil; }
-%end
-%hook MDXSession
-- (void)adPlaying:(id)ad {}
-%end
 %hook YTReelDataSource
 - (YTReelModel *)makeContentModelForEntry:(id)entry {
     YTReelModel *model = %orig;
