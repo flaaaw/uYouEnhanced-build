@@ -137,7 +137,7 @@ jobs:
           THEOS: ${{ github.workspace }}/theos
           YOUTUBE_URL: ${{ env.URL_YT }}
 
-      - name: Patch Return-YouTube-Dislikes and YTABConfig compile errors
+      - name: Patch Return-YouTube-Dislikes, YTABConfig and YouPiP compile errors
         run: |
           cd ${{ github.workspace }}/main
           python3 -c '
@@ -170,6 +170,45 @@ jobs:
                   print("⚠️ No se encontró la línea a parchar en YTABConfig. Es posible que ya esté corregido.")
           else:
               print("❌ No se encontró Settings.x para YTABConfig.")
+
+          # Patch YouPiP Settings.x
+          path = Path("Tweaks/YouPiP/Settings.x")
+          if path.exists():
+              content = path.read_text()
+              old = "NSMutableArray *mutableCategories = %orig.mutableCopy;"
+              new = "NSArray *categories = %orig;\n    NSMutableArray *mutableCategories = [categories mutableCopy];"
+              if old in content:
+                  path.write_text(content.replace(old, new, 1))
+                  print("✅ YouPiP Settings.x parchado con éxito.")
+              else:
+                  print("⚠️ No se encontró la línea a parchar en YouPiP Settings.x. Es posible que ya esté corregido.")
+          else:
+              print("❌ No se encontró Settings.x para YouPiP.")
+
+          # Patch YouPiP LegacyPiPCompat.x
+          path = Path("Tweaks/YouPiP/LegacyPiPCompat.x")
+          if path.exists():
+              content = path.read_text()
+              old1 = "return initPlayerPiPControllerIfNeeded(%orig, delegate, nil);"
+              new1 = "YTPlayerPIPController *controller = %orig;\n    return initPlayerPiPControllerIfNeeded(controller, delegate, nil);"
+              old2 = "return initPlayerPiPControllerIfNeeded(%orig, delegate, parentResponder);"
+              new2 = "YTPlayerPIPController *controller = %orig;\n    return initPlayerPiPControllerIfNeeded(controller, delegate, parentResponder);"
+              
+              modified = False
+              if old1 in content:
+                  content = content.replace(old1, new1, 1)
+                  modified = True
+              if old2 in content:
+                  content = content.replace(old2, new2, 1)
+                  modified = True
+              
+              if modified:
+                  path.write_text(content)
+                  print("✅ YouPiP LegacyPiPCompat.x parchado con éxito.")
+              else:
+                  print("⚠️ No se encontraron las líneas a parchar en YouPiP LegacyPiPCompat.x. Es posible que ya esté corregido.")
+          else:
+              print("❌ No se encontró LegacyPiPCompat.x para YouPiP.")
           '
 
       - name: Fix compiling & Build Package
