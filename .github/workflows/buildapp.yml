@@ -143,47 +143,32 @@ jobs:
           python3 -c '
           from pathlib import Path
           
-          # Patch Return-YouTube-Dislikes
-          path = Path("Tweaks/Return-YouTube-Dislikes/Settings.x")
-          if path.exists():
+          def patch_ordered_categories(filepath):
+              path = Path(filepath)
+              if not path.exists():
+                  print(f"❌ No se encontró {path.name} para {path.parent.name}.")
+                  return
               content = path.read_text()
-              old = "NSMutableArray *mutableCategories = %orig;"
-              new = "NSArray<NSNumber *> *categories = %orig;\n    NSMutableArray<NSNumber *> *mutableCategories = [categories mutableCopy];"
-              if old in content:
-                  path.write_text(content.replace(old, new, 1))
-                  print("✅ Return-YouTube-Dislikes parchado con éxito.")
+              patched = False
+              for old in [
+                  "NSMutableArray *mutableCategories = %orig.mutableCopy;",
+                  "NSMutableArray *mutableCategories = %orig;"
+              ]:
+                  if old in content:
+                      new = "NSArray *categories = %orig;\n    NSMutableArray *mutableCategories = [categories mutableCopy];"
+                      content = content.replace(old, new, 1)
+                      patched = True
+                      print(f"✅ {path.parent.name} ({old}) parchado con éxito.")
+                      break
+              if patched:
+                  path.write_text(content)
               else:
-                  print("⚠️ No se encontró la línea a parchar en Return-YouTube-Dislikes. Es posible que ya esté corregido.")
-          else:
-              print("❌ No se encontró Settings.x para Return-YouTube-Dislikes.")
-          
-          # Patch YTABConfig
-          path = Path("Tweaks/YTABConfig/Settings.x")
-          if path.exists():
-              content = path.read_text()
-              old = "NSMutableArray *mutableCategories = %orig.mutableCopy;"
-              new = "NSArray *categories = %orig;\n    NSMutableArray *mutableCategories = [categories mutableCopy];"
-              if old in content:
-                  path.write_text(content.replace(old, new, 1))
-                  print("✅ YTABConfig parchado con éxito.")
-              else:
-                  print("⚠️ No se encontró la línea a parchar en YTABConfig. Es posible que ya esté corregido.")
-          else:
-              print("❌ No se encontró Settings.x para YTABConfig.")
+                  print(f"⚠️ No se encontró la línea a parchar en {path.parent.name}. Es posible que ya esté corregido.")
 
-          # Patch YouPiP Settings.x
-          path = Path("Tweaks/YouPiP/Settings.x")
-          if path.exists():
-              content = path.read_text()
-              old = "NSMutableArray *mutableCategories = %orig.mutableCopy;"
-              new = "NSArray *categories = %orig;\n    NSMutableArray *mutableCategories = [categories mutableCopy];"
-              if old in content:
-                  path.write_text(content.replace(old, new, 1))
-                  print("✅ YouPiP Settings.x parchado con éxito.")
-              else:
-                  print("⚠️ No se encontró la línea a parchar en YouPiP Settings.x. Es posible que ya esté corregido.")
-          else:
-              print("❌ No se encontró Settings.x para YouPiP.")
+          # Patch the tweaks
+          patch_ordered_categories("Tweaks/Return-YouTube-Dislikes/Settings.x")
+          patch_ordered_categories("Tweaks/YTABConfig/Settings.x")
+          patch_ordered_categories("Tweaks/YouPiP/Settings.x")
 
           # Patch YouPiP LegacyPiPCompat.x
           path = Path("Tweaks/YouPiP/LegacyPiPCompat.x")
