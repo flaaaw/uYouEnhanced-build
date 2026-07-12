@@ -1220,7 +1220,11 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 // Hide CC / Hide Autoplay switch / Hide YTMusic Button / Enable Share Button / Enable Save to Playlist Button
 %hook YTMainAppControlsOverlayView
 - (void)setClosedCaptionsOrSubtitlesButtonAvailable:(BOOL)arg1 { // hide CC button
-    return IS_ENABLED(kHideCC) ? %orig(NO) : %orig;
+    if (IS_ENABLED(kHideCC)) {
+        %orig(NO);
+    } else {
+        %orig(arg1);
+    }
 }
 - (void)setAutoplaySwitchButtonRenderer:(id)arg1 { // hide Autoplay
     if (IS_ENABLED(kHideAutoplaySwitch)) {}
