@@ -267,16 +267,23 @@ UIColor* raisedColor = [UIColor colorWithRed:0.035 green:0.035 blue:0.035 alpha:
 }
 %end
 
-// Open link with...
 %hook ASWAppSwitchingSheetHeaderView
 - (void)setBackgroundColor:(UIColor *)color {
-    return IS_DARK_APPEARANCE_ENABLED ? %orig(raisedColor) : %orig;
+    if (IS_DARK_APPEARANCE_ENABLED) {
+        %orig(raisedColor);
+    } else {
+        %orig(color);
+    }
 }
 %end
 
 %hook ASWAppSwitchingSheetFooterView
 - (void)setBackgroundColor:(UIColor *)color {
-    return IS_DARK_APPEARANCE_ENABLED ? %orig(raisedColor) : %orig;
+    if (IS_DARK_APPEARANCE_ENABLED) {
+        %orig(raisedColor);
+    } else {
+        %orig(color);
+    }
 }
 %end
 
