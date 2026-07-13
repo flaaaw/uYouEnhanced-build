@@ -2096,4 +2096,8 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
     if (![allKeys containsObject:@"newSettingsUI_enabled"]) { 
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kNewSettingsUI]; 
     }
+    // Set Google Sign-In patch default to enabled
+    if (![allKeys containsObject:kGoogleSignInPatch]) { 
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kGoogleSignInPatch]; 
+    }
 }
