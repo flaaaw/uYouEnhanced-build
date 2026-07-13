@@ -93,8 +93,9 @@ static void repositionCreateTab(YTIGuideResponse *response) {
 // Workaround for issue #54
 %hook YTMainAppVideoPlayerOverlayViewController
 - (void)updateRelatedVideos {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"relatedVideosAtTheEndOfYTVideos"] == NO) {}
-    else { return %orig; }
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"relatedVideosAtTheEndOfYTVideos"]) {
+        %orig;
+    }
 }
 %end
 
@@ -177,13 +178,19 @@ static BOOL showNativeShareSheet(NSString *serializedShareEntity, UIView *source
 %hook YTAccountScopedCommandResponderEvent
 - (void)send {
     GPBExtensionDescriptor *shareEntityEndpointDescriptor = [%c(YTIShareEntityEndpoint) shareEntityEndpoint];
-    if (![self.command hasExtension:shareEntityEndpointDescriptor])
-        return %orig;
+    if (![self.command hasExtension:shareEntityEndpointDescriptor]) {
+        %orig;
+        return;
+    }
     YTIShareEntityEndpoint *shareEntityEndpoint = [self.command getExtension:shareEntityEndpointDescriptor];
-    if (!shareEntityEndpoint.hasSerializedShareEntity)
-        return %orig;
-    if (!showNativeShareSheet(shareEntityEndpoint.serializedShareEntity, self.fromView))
-        return %orig;
+    if (!shareEntityEndpoint.hasSerializedShareEntity) {
+        %orig;
+        return;
+    }
+    if (!showNativeShareSheet(shareEntityEndpoint.serializedShareEntity, self.fromView)) {
+        %orig;
+        return;
+    }
 }
 %end
 
@@ -192,20 +199,30 @@ static BOOL showNativeShareSheet(NSString *serializedShareEntity, UIView *source
 
 %hook ELMPBShowActionSheetCommand
 - (void)executeWithCommandContext:(ELMCommandContext*)context handler:(id)_handler {
-    if (!self.hasOnAppear)
-        return %orig;
+    if (!self.hasOnAppear) {
+        %orig;
+        return;
+    }
     GPBExtensionDescriptor *innertubeCommandDescriptor = [%c(YTIInnertubeCommandExtensionRoot) innertubeCommand];
-    if (![self.onAppear hasExtension:innertubeCommandDescriptor])
-        return %orig;
+    if (![self.onAppear hasExtension:innertubeCommandDescriptor]) {
+        %orig;
+        return;
+    }
     YTICommand *innertubeCommand = [self.onAppear getExtension:innertubeCommandDescriptor];
     GPBExtensionDescriptor *updateShareSheetCommandDescriptor = [%c(YTIUpdateShareSheetCommand) updateShareSheetCommand];
-    if(![innertubeCommand hasExtension:updateShareSheetCommandDescriptor])
-        return %orig;
+    if(![innertubeCommand hasExtension:updateShareSheetCommandDescriptor]) {
+        %orig;
+        return;
+    }
     YTIUpdateShareSheetCommand *updateShareSheetCommand = [innertubeCommand getExtension:updateShareSheetCommandDescriptor];
-    if (!updateShareSheetCommand.hasSerializedShareEntity)
-        return %orig;
-    if (!showNativeShareSheet(updateShareSheetCommand.serializedShareEntity, context.context.fromView))
-        return %orig;
+    if (!updateShareSheetCommand.hasSerializedShareEntity) {
+        %orig;
+        return;
+    }
+    if (!showNativeShareSheet(updateShareSheetCommand.serializedShareEntity, context.context.fromView)) {
+        %orig;
+        return;
+    }
 }
 %end
 // %end
