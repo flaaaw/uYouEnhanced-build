@@ -309,7 +309,7 @@ YTMainAppControlsOverlayView *controlsOverlayView;
         NSArray *listOptions = [showCommand listOptionArray];
         for (ELMPBElement *element in listOptions) {
             ELMPBProperties *properties = [element properties];
-            ELMPBIdentifierProperties *identifierProperties = [properties firstSubmessage];
+            ELMPBIdentifierProperties *identifierProperties = [properties respondsToSelector:@selector(firstSubmessage)] ? [properties performSelector:@selector(firstSubmessage)] : nil;
             // 19.30.2
             if ([identifierProperties respondsToSelector:@selector(identifier)]) {
                 NSString *identifier = [identifierProperties identifier];
@@ -649,7 +649,10 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 // YTClassicVideoQuality: https://github.com/PoomSmart/YTClassicVideoQuality
 %hook YTIMediaQualitySettingsHotConfig
 
-%new(B@:) - (BOOL)enableQuickMenuVideoQualitySettings { return NO; }
+%new(B@:)
+- (BOOL)enableQuickMenuVideoQualitySettings {
+    return NO;
+}
 
 %end
 
@@ -1119,7 +1122,8 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 %end
 %hook UIApplication 
 - (void)setSystemVolumeHUDEnabled:(BOOL)arg1 forAudioCategory:(id)arg2 {
-        %orig(true, arg2);
+        BOOL enabled = true;
+        %orig(enabled, arg2);
 }
 %end
 %end
@@ -1397,7 +1401,8 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 %group gHideOverlayDarkBackground
 %hook YTMainAppVideoPlayerOverlayView
 - (void)setBackgroundVisible:(BOOL)arg1 isGradientBackground:(BOOL)arg2 {
-    %orig(NO, arg2);
+    BOOL visible = NO;
+    %orig(visible, arg2);
 }
 %end
 %end
@@ -1858,10 +1863,12 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
     %orig();
 }
 - (void)setFillColor:(id)arg1 {
-    %orig([UIColor clearColor]);
+    id clearColor = [UIColor clearColor];
+    %orig(clearColor);
 }
 - (void)setBorderColor:(id)arg1 {
-    %orig([UIColor clearColor]);
+    id clearColor = [UIColor clearColor];
+    %orig(clearColor);
 }
 %end
 %hook YTCountView

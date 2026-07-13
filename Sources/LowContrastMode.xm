@@ -174,19 +174,22 @@ static inline BOOL isDarkMode() {
 
 %hook UIExtendedSRGColorSpace
 - (void)setTextColor:(UIColor *)textColor {
-    %orig([kDefaultTextColor colorWithAlphaComponent:0.9]);
+    UIColor *finalColor = [kDefaultTextColor colorWithAlphaComponent:0.9];
+    %orig(finalColor);
 }
 %end
 
 %hook UIExtendedSRGBColorSpace
 - (void)setTextColor:(UIColor *)textColor {
-    %orig([kDefaultTextColor colorWithAlphaComponent:1.0]);
+    UIColor *finalColor = [kDefaultTextColor colorWithAlphaComponent:1.0];
+    %orig(finalColor);
 }
 %end
 
 %hook UIExtendedGrayColorSpace
 - (void)setTextColor:(UIColor *)textColor {
-    %orig([kDefaultTextColor colorWithAlphaComponent:1.0]);
+    UIColor *finalColor = [kDefaultTextColor colorWithAlphaComponent:1.0];
+    %orig(finalColor);
 }
 %end
 

@@ -167,7 +167,8 @@ UIColor* raisedColor = [UIColor colorWithRed:0.035 green:0.035 blue:0.035 alpha:
 %hook GOODialogView
 - (void)setBackgroundColor:(UIColor *)color {
     if (IS_DARK_APPEARANCE_ENABLED) {
-        %orig([UIColor blackColor]);
+        UIColor *bgColor = [UIColor blackColor];
+        %orig(bgColor);
     } else {
         %orig(color);
     }
@@ -456,7 +457,8 @@ UIColor *customHexColor;
 }
 - (void)setTextColor:(UIColor *)color { // fix black text in #Shorts video's comment
     if (IS_DARK_APPEARANCE_ENABLED) {
-        %orig([UIColor whiteColor]);
+        UIColor *textCol = [UIColor whiteColor];
+        %orig(textCol);
     } else {
         %orig(color);
     }
@@ -475,7 +477,8 @@ UIColor *customHexColor;
 %hook YTFormattedStringLabel  // YT is werid...
 - (void)setBackgroundColor:(UIColor *)color {
     if (IS_DARK_APPEARANCE_ENABLED) {
-        %orig([UIColor clearColor]);
+        UIColor *bgColor = [UIColor clearColor];
+        %orig(bgColor);
     } else {
         %orig(color);
     }
