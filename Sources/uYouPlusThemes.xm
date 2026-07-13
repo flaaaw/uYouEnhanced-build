@@ -670,7 +670,10 @@ UIColor *customHexColor;
 %end
 
 %hook UIKBRenderConfig // Prediction text color
-- (void)setLightKeyboard:(BOOL)arg1 { %orig(NO); }
+- (void)setLightKeyboard:(BOOL)arg1 {
+    BOOL val = NO;
+    %orig(val);
+}
 %end
 %end
 

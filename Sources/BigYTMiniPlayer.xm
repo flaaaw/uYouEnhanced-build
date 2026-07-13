@@ -3,7 +3,8 @@
 %group BigYTMiniPlayer // https://github.com/Galactic-Dev/BigYTMiniPlayer
 %hook YTWatchMiniBarView
 - (void)setWatchMiniPlayerLayout:(int)arg1 {
-    %orig(1);
+    int layout = 1;
+    %orig(layout);
 }
 - (int)watchMiniPlayerLayout {
     return 1;

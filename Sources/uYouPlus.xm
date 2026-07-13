@@ -967,7 +967,8 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 %end
 %hook YTPlayerBarController
 - (void)setHeatmap:(id)arg1 {
-    %orig(NULL);
+    id val = NULL;
+    %orig(val);
 }
 %end
 %end
@@ -1133,7 +1134,8 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 %hook YTDoubleTapToSeekController
 - (void)enableDoubleTapToSeek:(BOOL)arg1 {
     if (IS_ENABLED(kDoubleTapToSeek)) {
-        %orig(NO);
+        BOOL val = NO;
+        %orig(val);
     } else {
         %orig(arg1);
     }
@@ -1221,7 +1223,8 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 %hook YTMainAppControlsOverlayView
 - (void)setClosedCaptionsOrSubtitlesButtonAvailable:(BOOL)arg1 { // hide CC button
     if (IS_ENABLED(kHideCC)) {
-        %orig(NO);
+        BOOL val = NO;
+        %orig(val);
     } else {
         %orig(arg1);
     }
@@ -1237,18 +1240,22 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
     }
 }
 - (void)setShareButtonAvailable:(BOOL)arg1 {
+    BOOL val;
     if (IS_ENABLED(kEnableShareButton)) {
-        %orig(YES);
+        val = YES;
     } else {
-        %orig(NO);
+        val = NO;
     }
+    %orig(val);
 }
 - (void)setAddToButtonAvailable:(BOOL)arg1 {
+    BOOL val;
     if (IS_ENABLED(kEnableSaveToButton)) {
-        %orig(YES);
+        val = YES;
     } else {
-        %orig(NO);
+        val = NO;
     }
+    %orig(val);
 }
 %end
 
@@ -1359,11 +1366,8 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 - (void)setShouldDisplayTimeRemaining:(BOOL)arg1 {
     if (IS_ENABLED(@"disableRemainingTime_enabled")) {
         // Set true if alwaysShowRemainingTime
-        if (IS_ENABLED(@"alwaysShowRemainingTime_enabled")) {
-            %orig(YES);
-        } else {
-            %orig(NO);
-        }
+        BOOL val = IS_ENABLED(@"alwaysShowRemainingTime_enabled") ? YES : NO;
+        %orig(val);
         return;
     }
     %orig;
@@ -1717,7 +1721,8 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 	return YES;
 }
 - (void)setHintsDisabled:(BOOL)arg1 {
-    %orig(YES);
+    BOOL val = YES;
+    %orig(val);
 }
 %end
 %hook YTUserDefaults
@@ -1725,7 +1730,8 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 	return YES;
 }
 - (void)setHintsDisabled:(BOOL)arg1 {
-    %orig(YES);
+    BOOL val = YES;
+    %orig(val);
 }
 %end
 %end
@@ -1748,7 +1754,10 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 %end
 
 %hook YTHeaderContentComboView
-- (void)setFeedHeaderScrollMode:(int)arg1 { %orig(0); }
+- (void)setFeedHeaderScrollMode:(int)arg1 {
+    int mode = 0;
+    %orig(mode);
+}
 %end
 
 // Hide the chip bar under the video player?
